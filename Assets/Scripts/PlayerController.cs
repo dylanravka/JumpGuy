@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 initScale = new Vector3();
 
+    private Vector3 initPos = new Vector3();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
         playerAnim = GetComponent<Animator>();
 
         initScale = transform.localScale;
+        initPos = transform.localPosition;
     }
 
     // Update is called once per frame
@@ -57,15 +60,23 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(new Vector3(horizontalMovement, 0.0f, 0.0f));
 
-        Debug.Log("HORIZONTAL MOVEMENT: " + horizontalMovement);
-
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
+            isJumping = false;
+            playerAnim.SetBool("isGrounded", true);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("TRIGGER COLLISION WITH: " + collision.gameObject.name);
+        if (collision.gameObject.tag == "FallPit")
+        {
+            transform.localPosition = initPos;
             isJumping = false;
             playerAnim.SetBool("isGrounded", true);
         }
