@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 initPos = new Vector3();
 
+    public GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,12 +75,20 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("TRIGGER COLLISION WITH: " + collision.gameObject.name);
         if (collision.gameObject.tag == "FallPit")
         {
             transform.localPosition = initPos;
             isJumping = false;
             playerAnim.SetBool("isGrounded", true);
+        }
+        if (collision.gameObject.tag == "Collectable")
+        {
+            if (collision.GetComponent<Collectible>() != null)
+            {
+                gameManager.AddScore(collision.GetComponent<Collectible>().score);
+                Destroy(collision.gameObject);
+            }
+
         }
     }
 }
